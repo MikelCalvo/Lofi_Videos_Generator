@@ -8,7 +8,7 @@ from assets.wordlists.happy_words import happy_word_list
 from assets.wordlists.dark_words import dark_word_list
 
 class Generator:
-    def __init__(self, filename, audioname, resizeForTikTok, textBoolean, wordType, colorEffect):
+    def __init__(self, filename, audioname, resizeForTikTok, textBoolean, wordType, colorEffect, textDuration):
         self.total_duration = 0
         self.clip_list = []
         self.clip = mpe.VideoFileClip(filename)
@@ -18,6 +18,7 @@ class Generator:
         self.text_boolean = textBoolean
         self.word_type = wordType
         self.colorEffect = colorEffect
+        self.text_duration = textDuration
 
     def audi_test(self):
         f = self.clip.set_audio(self.audio)
@@ -67,17 +68,17 @@ class Generator:
             word = dark_word_list[r]
         spaced_word = "  ".join([e for e in word])
         if self.resizeForTikTok == "y" :
-            clip = mpe.TextClip(spaced_word, fontsize = 30, color = "white",size=self.clip.size,bg_color = "black",method="caption",align="center").set_duration(1.5)
-            self.total_duration += 1.5
+            clip = mpe.TextClip(spaced_word, fontsize = 30, color = "white",size=self.clip.size,bg_color = "black",method="caption",align="center").set_duration(self.text_duration)
         else :
-            clip = mpe.TextClip(spaced_word, fontsize = 50, color = "white",size=self.clip.size,bg_color = "black",method="caption",align="center").set_duration(2)
-            self.total_duration += 2
+            clip = mpe.TextClip(spaced_word, fontsize = 50, color = "white",size=self.clip.size,bg_color = "black",method="caption",align="center").set_duration(self.text_duration)
+
+        self.total_duration += self.text_duration
         self.clip_list.append(clip)
             
 print("/********************************")
 print(" *Social Media Content Generator*")
 print(" ********************************/")
-print("");
+print("")
 
 movie_name = input("Filename of the Movie?: ")
 song_name = input("Filename of the Song?: ")
@@ -85,14 +86,16 @@ movie_duration = int(input("How much seconds should it last?: "))
 resizeForTikTok = input("Resize for Tik Tok? (y/n): ")
 text_boolean = input("Do you want the initial text screen? (y/n): ")
 if text_boolean == "y" :
-    word_type = input("What type of video is? (type 'list' to see the available types): ")
+    text_duration = float(input("How many seconds do you want for the initial screen? (ex: 1.5): "))
+    word_type = input("What type of video do you want? (type 'list' to see the available types): ")
     if word_type == "list" :
-        word_type = input("Available types: sad, happy or dark. What type of video is?: ")
+        word_type = input("Available types: sad, happy or dark. What type of video do you want?: ")
 else :
     word_type = "None"
+    text_duration = 0
 colorEffect = input("What color effect do you want? (type 'list' to see the available colors): ")  
 if colorEffect == "list" :
-    colorEffect = input("Available colors: red, white, dark, gray, blue, navy, orange, pink or yellow. What color effect do you want?: ")      
+    colorEffect = input("Available colors: red, white, dark, blue, navy, orange, pink or yellow. What color effect do you want?: ")      
 
-g = Generator(movie_name, song_name, resizeForTikTok, text_boolean, word_type, colorEffect)
+g = Generator(movie_name, song_name, resizeForTikTok, text_boolean, word_type, colorEffect, text_duration)
 g.create(movie_duration)
