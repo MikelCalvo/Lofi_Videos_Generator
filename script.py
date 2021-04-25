@@ -1,18 +1,18 @@
 import moviepy.editor as mpe
 import moviepy.video as mpv
+from moviepy.video.fx.all import crop
 from random import randint
 from math import floor
 from assets.words import word_list
 
-
-
 class Generator:
-    def __init__(self, filename, audioname):
+    def __init__(self, filename, audioname, resizeForTikTok):
         self.total_duration = 0
         self.clip_list = []
         self.clip = mpe.VideoFileClip(filename)
         self.audio = mpe.AudioFileClip(audioname)
         self.overlay = mpe.VideoFileClip('assets/overlay.mov').subclip().resize(self.clip.size).set_opacity(0.40)
+        self.resizeForTikTok = resizeForTikTok
 
     def audi_test(self):
         f = self.clip.set_audio(self.audio)
@@ -26,7 +26,17 @@ class Generator:
         final = mpe.CompositeVideoClip([final, image])
         self.audio = self.audio.set_duration(self.total_duration)
         final = final.set_audio(self.audio)
-        final.write_videofile('output_file.mp4', temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
+        if self.resizeForTikTok == "y" :
+            (w, h) = final.size
+            if h == 1080 :
+                cropClip = crop(final, width=607.50, height=1080, x_center=w/2, y_center=h/2)
+                finalClip = cropClip.resize(height=1080)
+            else :
+                cropClip = crop(final, width=405, height=720, x_center=w/2, y_center=h/2)
+                finalClip = cropClip.resize(height=720)
+            finalClip.write_videofile("output_file.mp4", temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
+        else :
+            final.write_videofile("output_file.mp4", temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
 
     def add_clip(self):
         r = randint(0, floor(self.clip.duration-10))
@@ -41,13 +51,18 @@ class Generator:
         r = randint(0, len(word_list))
         word = word_list[r]
         spaced_word = '  '.join([e for e in word])
-        clip = mpe.TextClip(spaced_word, fontsize = 70, color = 'white',size=self.clip.size,bg_color = 'black',method='caption',align='center').set_duration(2)
+        if self.resizeForTikTok == "y" :
+            clip = mpe.TextClip(spaced_word, fontsize = 30, color = 'white',size=self.clip.size,bg_color = 'black',method='caption',align='center').set_duration(1.5)
+        else :
+            clip = mpe.TextClip(spaced_word, fontsize = 50, color = 'white',size=self.clip.size,bg_color = 'black',method='caption',align='center').set_duration(2)
+        
         self.clip_list.append(clip)
         self.total_duration += 2
-    
-movie_name = input("Filename of Movie?")
-music = input("Filename of music?")
-desired_duration = int(input("Desired edit duration in seconds?"))
 
-g = Generator(movie_name, music)
-g.create(desired_duration)
+movie_name = input("Filename of the Movie?: ")
+song_name = input("Filename of the Song?: ")
+movie_duration = input("How much seconds should it last?: ")
+convert_to_tiktok = input("Resize for Tik Tok? (y/n): ")
+
+g = Generator(movie_name, song_name, convert_to_tiktok)
+g.create(movie_duration)
