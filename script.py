@@ -57,7 +57,10 @@ class Generator:
             clip = mpe.TextClip(spaced_word, fontsize = 50, color = 'white',size=self.clip.size,bg_color = 'black',method='caption',align='center').set_duration(2)
         
         self.clip_list.append(clip)
-        self.total_duration += 2
+        if self.resizeForTikTok == "y" :
+            self.total_duration += 1.5
+        else :
+            self.total_duration += 2
 
 movie_name = input("Filename of the Movie?: ")
 song_name = input("Filename of the Song?: ")
