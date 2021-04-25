@@ -6,19 +6,23 @@ from math import floor
 from assets.words import word_list
 
 class Generator:
-    def __init__(self, filename, audioname, resizeForTikTok):
+    def __init__(self, filename, audioname, resizeForTikTok, textBoolean):
         self.total_duration = 0
         self.clip_list = []
         self.clip = mpe.VideoFileClip(filename)
         self.audio = mpe.AudioFileClip(audioname)
         self.overlay = mpe.VideoFileClip('assets/overlay.mov').subclip().resize(self.clip.size).set_opacity(0.40)
         self.resizeForTikTok = resizeForTikTok
+        self.text_boolean = textBoolean
 
     def audi_test(self):
         f = self.clip.set_audio(self.audio)
         f.write_videofile('out.mp4', temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
     def create(self, desired_length):
-        self.random_word_screen()
+
+        if self.text_boolean == "y" :
+            self.random_word_screen()
+
         while self.total_duration < desired_length:
             self.add_clip()
         final = mpe.concatenate_videoclips(self.clip_list)
@@ -64,8 +68,9 @@ class Generator:
 
 movie_name = input("Filename of the Movie?: ")
 song_name = input("Filename of the Song?: ")
-movie_duration = input("How much seconds should it last?: ")
+movie_duration = int(input("How much seconds should it last?: "))
 convert_to_tiktok = input("Resize for Tik Tok? (y/n): ")
+text_boolean = input("Do you want the initial text screen? (y/n): ")
 
-g = Generator(movie_name, song_name, convert_to_tiktok)
+g = Generator(movie_name, song_name, convert_to_tiktok, text_boolean)
 g.create(movie_duration)
