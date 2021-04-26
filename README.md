@@ -8,14 +8,15 @@ Originally created by [Tren Black](https://github.com/Trenblack), I have added s
 1) Put a video file and an audio file in the same directiory as the script.
 2) Run script.py using Python3.
 3) Enter the filenames of the video file and audio file.
-4) Enter how long you want to edit to be (in seconds).
-5) Type "y" if you want to make it with the Tik Tok aspect ratio and size.
-6) Type "y" if you want a initial text.
-7) Enter how long do you want a initial text duration (in seconds).
-8) Enter what wordlist do you want (sad/happy/dark).
-9) Enter what color effect do you want (red/white/dark/blue...).
-10) Wait! It may take a while to finish.
-11) An output file named "output_file.mp4" will be created.
+4) Enter the filename of the generate video.
+5) Enter how long you want to edit to be (in seconds).
+6) Type "y" if you want to make it with the Tik Tok aspect ratio and size.
+7) Type "y" if you want a initial text.
+8) Enter how long do you want a initial text duration (in seconds).
+9) Enter what wordlist do you want (sad/happy/dark).
+10) Enter what color effect do you want (red/white/dark/blue...).
+11) Wait! It may take a while to finish.
+12) An output file with your custom named will be created.
 
 # Dependencies
 - Moviepy v1.0.0 (other versions may give errors)
