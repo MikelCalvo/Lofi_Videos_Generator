@@ -8,11 +8,12 @@ from assets.wordlists.happy_words import happy_word_list
 from assets.wordlists.dark_words import dark_word_list
 
 class Generator:
-    def __init__(self, filename, audioname, resizeForTikTok, textBoolean, wordType, colorEffect, textDuration):
+    def __init__(self, filename, audioname, outputFileName, resizeForTikTok, textBoolean, wordType, colorEffect, textDuration):
         self.total_duration = 0
         self.clip_list = []
         self.clip = mpe.VideoFileClip(filename)
         self.audio = mpe.AudioFileClip(audioname)
+        self.output_file_name = outputFileName
         self.overlay = mpe.VideoFileClip("assets/overlay.mov").subclip().resize(self.clip.size).set_opacity(0.40)
         self.resizeForTikTok = resizeForTikTok
         self.text_boolean = textBoolean
@@ -43,9 +44,9 @@ class Generator:
             else :
                 cropClip = crop(final, width=405, height=720, x_center=w/2, y_center=h/2)
                 finalClip = cropClip.resize(height=720)
-            finalClip.write_videofile("output_file.mp4", temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
+            finalClip.write_videofile("TikTok_" + self.output_file_name + ".mp4", temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
         else :
-            final.write_videofile("output_file.mp4", temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
+            final.write_videofile(self.output_file_name + ".mp4", temp_audiofile="temp-audio.m4a", remove_temp=True, codec="libx264", audio_codec="aac")
 
     def add_clip(self):
         r = randint(0, floor(self.clip.duration-10))
@@ -79,13 +80,15 @@ TEXT_BOLD = "\033[1m"
 TEXT_BLUE = "\033[94m"
 TEXT_FORMAT_END = "\033[0m"
 
+print("")
 print(TEXT_BOLD + TEXT_BLUE + "/********************************" + TEXT_FORMAT_END)
 print(TEXT_BOLD + TEXT_BLUE + " *Social Media Content Generator*" + TEXT_FORMAT_END)
 print(TEXT_BOLD + TEXT_BLUE + " ********************************/" + TEXT_FORMAT_END)
-print("");
+print("")
 
 movie_name = input(TEXT_BOLD + "Filename of the Movie?: " + TEXT_FORMAT_END)
 song_name = input(TEXT_BOLD + "Filename of the Song?: " + TEXT_FORMAT_END)
+output_file_name = input(TEXT_BOLD + "Filename of the generate Movie?: " + TEXT_FORMAT_END)
 movie_duration = int(input(TEXT_BOLD + "How much seconds should it last?: " + TEXT_FORMAT_END))
 resizeForTikTok = input(TEXT_BOLD + "Resize for Tik Tok? (y/n): ")
 text_boolean = input(TEXT_BOLD + "Do you want the initial text screen? (y/n): " + TEXT_FORMAT_END)
@@ -101,5 +104,5 @@ colorEffect = input(TEXT_BOLD + "What color effect do you want? (type 'list' to 
 if colorEffect == "list" :
     colorEffect = input(TEXT_BOLD + "Available colors: red, white, dark, blue, navy, orange, pink or yellow. What color effect do you want?: " + TEXT_FORMAT_END)      
 
-g = Generator(movie_name, song_name, resizeForTikTok, text_boolean, word_type, colorEffect, text_duration)
+g = Generator(movie_name, song_name, output_file_name, resizeForTikTok, text_boolean, word_type, colorEffect, text_duration)
 g.create(movie_duration)
