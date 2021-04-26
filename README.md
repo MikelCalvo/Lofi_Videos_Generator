@@ -15,8 +15,9 @@ Originally created by [Tren Black](https://github.com/Trenblack), I have added s
 8) Enter how long do you want a initial text duration (in seconds).
 9) Enter what wordlist do you want (sad/happy/dark).
 10) Enter what color effect do you want (red/white/dark/blue...).
-11) Wait! It may take a while to finish.
-12) An output file with your custom named will be created.
+11) Enter what opacity do you want for the color effect (ex: 0.30).
+12) Wait! It may take a while to finish.
+13) An output file with your custom named will be created.
 
 # Dependencies
 - Moviepy v1.0.0 (other versions may give errors)

@@ -8,7 +8,7 @@ from assets.wordlists.happy_words import happy_word_list
 from assets.wordlists.dark_words import dark_word_list
 
 class Generator:
-    def __init__(self, filename, audioname, outputFileName, resizeForTikTok, textBoolean, wordType, colorEffect, textDuration):
+    def __init__(self, filename, audioname, outputFileName, resizeForTikTok, textBoolean, wordType, colorEffect, opacityEffect, textDuration):
         self.total_duration = 0
         self.clip_list = []
         self.clip = mpe.VideoFileClip(filename)
@@ -19,6 +19,7 @@ class Generator:
         self.text_boolean = textBoolean
         self.word_type = wordType
         self.colorEffect = colorEffect
+        self.opacity_effect = opacityEffect
         self.text_duration = textDuration
 
     def audi_test(self):
@@ -32,7 +33,7 @@ class Generator:
         while self.total_duration < desired_length:
             self.add_clip()
         final = mpe.concatenate_videoclips(self.clip_list)
-        image = mpe.ImageClip("assets/colors/" + self.colorEffect + ".png").resize(self.clip.size).set_opacity(0.35).set_duration(self.total_duration)
+        image = mpe.ImageClip("assets/colors/" + self.colorEffect + ".png").resize(self.clip.size).set_opacity(self.opacity_effect).set_duration(self.total_duration)
         final = mpe.CompositeVideoClip([final, image])
         self.audio = self.audio.set_duration(self.total_duration)
         final = final.set_audio(self.audio)
@@ -100,9 +101,12 @@ if text_boolean == "y" :
 else :
     word_type = "None"
     text_duration = 0
-colorEffect = input(TEXT_BOLD + "What color effect do you want? (type 'list' to see the available colors): " + TEXT_FORMAT_END)  
+colorEffect = input(TEXT_BOLD + "What color effect do you want? (type 'list' to see the available colors): " + TEXT_FORMAT_END)
 if colorEffect == "list" :
     colorEffect = input(TEXT_BOLD + "Available colors: red, white, dark, blue, navy, orange, pink or yellow. What color effect do you want?: " + TEXT_FORMAT_END)      
+opacity_effect = float(input(TEXT_BOLD + "How much opacity do you want for the color effect? (ex:0.30) (you can select 'd' for default opacity): " + TEXT_FORMAT_END))
+if opacity_effect == "d" :
+    opacity_effect = 0.30
 
-g = Generator(movie_name, song_name, output_file_name, resizeForTikTok, text_boolean, word_type, colorEffect, text_duration)
+g = Generator(movie_name, song_name, output_file_name, resizeForTikTok, text_boolean, word_type, colorEffect, opacity_effect, text_duration)
 g.create(movie_duration)
